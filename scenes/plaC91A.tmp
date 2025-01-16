@@ -1,0 +1,86 @@
+[gd_scene load_steps=13 format=3 uid="uid://dx48g883t1rus"]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_6lggo"]
+[ext_resource type="Texture2D" uid="uid://7tl1dviulow0" path="res://art/playerGrey_walk1.png" id="1_87pgj"]
+[ext_resource type="Texture2D" uid="uid://d3h2ni18nd1vi" path="res://art/playerGrey_up1.png" id="2_gbirc"]
+[ext_resource type="Texture2D" uid="uid://dma6bw2vy1wtn" path="res://art/playerGrey_walk2.png" id="2_tbrlp"]
+[ext_resource type="Texture2D" uid="uid://deo2ns7muo6fq" path="res://art/playerGrey_up2.png" id="3_vcaox"]
+[ext_resource type="Texture2D" uid="uid://onisupuylwu4" path="res://art/lightning_skill2_frame1.png" id="6_acdmp"]
+[ext_resource type="Texture2D" uid="uid://b4nt5xu8j8kfr" path="res://art/lightning_skill2_frame2.png" id="7_vsi5n"]
+[ext_resource type="Texture2D" uid="uid://qu1j3ynphbtn" path="res://art/lightning_skill2_frame3.png" id="8_dy0e8"]
+[ext_resource type="Texture2D" uid="uid://cjo01l8vfnwpn" path="res://art/lightning_skill2_frame4.png" id="9_f07t6"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3jnfe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_gbirc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_vcaox")
+}],
+"loop": true,
+"name": &"up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_87pgj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_tbrlp")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0ujgf"]
+radius = 27.0
+height = 68.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_r1wpx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_acdmp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_vsi5n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_dy0e8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_f07t6")
+}],
+"loop": true,
+"name": &"teleport",
+"speed": 15.0
+}]
+
+[node name="Player" type="Area2D"]
+script = ExtResource("1_6lggo")
+
+[node name="PlayerAnimation2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+sprite_frames = SubResource("SpriteFrames_3jnfe")
+animation = &"up"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_0ujgf")
+
+[node name="TeleportTimer" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="ActionAnimations2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(94, -1.14441e-05)
+scale = Vector2(0.75, 0.75)
+sprite_frames = SubResource("SpriteFrames_r1wpx")
+animation = &"teleport"
+frame = 1
+frame_progress = 0.763059
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="TeleportTimer" to="." method="_on_teleport_timer_timeout"]
+[connection signal="animation_looped" from="ActionAnimations2D" to="." method="_on_action_animations_2d_animation_looped"]
